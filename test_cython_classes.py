@@ -31,17 +31,39 @@ if __name__ == "__main__":
     if classut == "Test3":
         T = ray.remote(Test3)
         a = T.remote()
-        #Method 1 has *args after positional arg--not supported
-        res = ray.get(a.method1.remote(1))
-        print("Res is: ", res)
-        #Method 2 has *args after positional arg--not supported
-        #and a keyword argument after *args
-        res = ray.get(a.method2.remote(1))
-        print("Res is: ", res)
-        #Method 3 has *args after positional arg--not supported
-        #and a keyword argument after *args, followed by **kwargs
-        res = ray.get(a.method3.remote(1))
-        print("Res is: ", res)
+        
+        if True:
+            #Method 1 has *args after positional arg
+            #Neither **kwargs nor **args with **kwargs supported
+            #by remote functions according to signature.py docstring
+            #Initialization of the actor succeeds and succeeds in
+            #execution
+            res = ray.get(a.method1.remote(1))
+            print("Res is: ", res)
+        if False:
+            #Method 2 has *args after positional arg
+            #and a default keyword argument, b, after *args
+            #Neither **kwargs nor **args with **kwargs supported
+            #by remote functions according to signature.py docstring
+            #But the initialization of the actor succeeds and then fails in
+            #execution
+            #Fails with:
+            #Exception: The name 'b' is not a valid keyword argument 
+            #for the function 'method2'
+            res = ray.get(a.method2.remote(1,b=2))
+            print("Res is: ", res)
+        if False:
+            #Method 3 has *args after positional arg
+            #and a keyword argument after *args, followed by **kwargs
+            #Neither **kwargs nor **args with **kwargs supported
+            #by remote functions according to signature.py docstring
+            #But the initialization of the actor succeeds and then fails in
+            #execution.
+            #Fails with:
+            #Exception: The name 'b' is not a valid keyword argument 
+            #for the function 'method3'
+            res = ray.get(a.method3.remote(1,b=2))
+            print("Res is: ", res)
 
     if classut == "Test4":
         T = ray.remote(Test4)
