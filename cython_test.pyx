@@ -28,18 +28,17 @@ cdef class Test3:
     def __cinit__(self):
         pass
     def method1(self, a, *args):
-        #Ray checks for *args of a cython method as its not supported
-        #But this slips by and breaks when workers try to run.
+        #Ray allows *args
         self.a = a
         return self.a+1
     def method2(self, a, *args, b=2):
-        #Ray checks for *args of a cython method as its not supported
+        #Ray checks for *args  and **kwargs in method as its not supported
         #But this slips by and breaks when workers try to run.
         self.a = a
         self.b = b
         return self.a+self.b
     def method3(self, a, *args, b=2, **kwargs):
-        #Ray checks for *kwargs of a cython method as its not supported
+        #Ray checks for *kwargs of a method as its not supported
         #But this slips by and breaks when workers try to run.
         self.a = a
         self.b = b
